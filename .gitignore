@@ -1,5 +1,6 @@
 beilul-migration/HELP.md
 target/
+project-files
 .mvn
 !**/src/main/**
 !**/src/test/**

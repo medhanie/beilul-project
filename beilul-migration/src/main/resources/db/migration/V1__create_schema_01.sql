@@ -6,9 +6,7 @@ DROP SCHEMA IF EXISTS beilul;
 CREATE SCHEMA beilul;
 USE beilul;
 
---
--- Table structure for table `member`
---
+
 DROP TABLE IF EXISTS flyway_schema_history;
 SET character_set_client = utf8mb4 ;
 CREATE TABLE flyway_schema_history (
@@ -28,10 +26,8 @@ CREATE TABLE flyway_schema_history (
 
 CREATE TABLE membership (
     member_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    first_name VARCHAR(45) NOT NULL,
-    first_name_tig NVARCHAR(45) NOT NULL,
-    last_name VARCHAR(45) NOT NULL,
-    last_name_tig NVARCHAR(45) NOT NULL,
+    first_name NVARCHAR(50) NOT NULL,
+    last_name NVARCHAR(50) NOT NULL,
     address_id INT UNSIGNED NOT NULL,
     picture VARCHAR(255) DEFAULT NULL,
     picture_thumb VARCHAR(255) DEFAULT NULL,
@@ -46,7 +42,7 @@ CREATE TABLE membership (
     CONSTRAINT fk_staff_address FOREIGN KEY (address_id)
         REFERENCES address (address_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE role (
     role_id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -55,77 +51,105 @@ CREATE TABLE role (
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY role_name_unique (name),
     PRIMARY KEY (role_id)
-);
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 
 CREATE TABLE member_role (
-    member_id INT REFERENCES user (member_id),
-    role_id TINYINT REFERENCES role (role_id),
-    PRIMARY KEY (member_id , role_id)
-);
+    member_id INT UNSIGNED NOT NULL,
+    role_id TINYINT UNSIGNED NOT NULL,
+    PRIMARY KEY (member_id , role_id),
+    KEY idx_fk_member_id (member_id),
+    CONSTRAINT fk_membership_role FOREIGN KEY (member_id)
+        REFERENCES membership (member_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_role_id (role_id),
+    CONSTRAINT fk_role FOREIGN KEY (role_id)
+        REFERENCES role (role_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE address (
     address_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    address VARCHAR(50) NOT NULL,
-    address2 VARCHAR(50) DEFAULT NULL,
-    district VARCHAR(20) NOT NULL,
-    city_id SMALLINT UNSIGNED NOT NULL,
+    address NVARCHAR(50) NOT NULL,
+    address2 NVARCHAR(50) DEFAULT NULL,
+    district NVARCHAR(20) NOT NULL,
+    country_id CHAR(3) NOT NULL,
+    city_name NVARCHAR(50),
+    admin_zone_name NVARCHAR(50),
     postal_code VARCHAR(10) DEFAULT NULL,
     phone VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (address_id),
-    KEY idx_fk_city_id (city_id),
-    CONSTRAINT `fk_address_city` FOREIGN KEY (city_id)
-        REFERENCES city (city_id)
+    KEY idx_fk_country_id (country_id),
+    CONSTRAINT `fk_address_country_id` FOREIGN KEY (country_id)
+        REFERENCES country (country_id_iso3)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE city (
     city_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    city VARCHAR(50) NOT NULL,
-    country_id SMALLINT UNSIGNED NOT NULL,
+    city_name NVARCHAR(50) NOT NULL,
+    admin_zone_id SMALLINT UNSIGNED NOT NULL,
+    latitude DECIMAL(6 , 4 ),
+    longitude DECIMAL(6 , 2 ),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (city_id),
-    KEY idx_fk_country_id (country_id),
-    CONSTRAINT `fk_city_country` FOREIGN KEY (country_id)
-        REFERENCES country (country_id)
+    KEY idx_fk_admin_zone_id (admin_zone_id),
+    CONSTRAINT `fk_admin_zone` FOREIGN KEY (admin_zone_id)
+        REFERENCES admin_zone (admin_zone_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
-CREATE TABLE country (
-    country_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    country VARCHAR(50) NOT NULL,
+CREATE TABLE admin_zone (
+    admin_zone_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    admin_zone_name NVARCHAR(60) NOT NULL,
+    country_id CHAR(3) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (country_id)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+    PRIMARY KEY (admin_zone_id),
+    KEY idx_fk_country_id (country_id),
+    CONSTRAINT `fk_admin_zone_country` FOREIGN KEY (country_id)
+        REFERENCES country (country_id_iso3)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+CREATE TABLE country (
+    country_id_iso3 CHAR(3) NOT NULL,
+    country_id_iso2 CHAR(2) NOT NULL,
+    country_name NVARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY idx_unique_iso2 (country_id_iso2),
+    PRIMARY KEY (country_id_iso3)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 
 CREATE TABLE content (
     content_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     title NVARCHAR(127) NOT NULL,
     body TEXT NOT NULL,
-    summary VARCHAR(255),
-    created_by INT NOT NULL REFERENCES member_id (member_id),
+    summary NVARCHAR(255),
+    created_by INT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (content_id),
     KEY idx_fk_member_id (created_by),
     CONSTRAINT fk_content_member FOREIGN KEY (created_by)
-        REFERENCES member_id (member_id)
+        REFERENCES membership (member_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
-);
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE content_text (
     content_id INT UNSIGNED NOT NULL,
     title NVARCHAR(127) NOT NULL,
     body TEXT NOT NULL,
-    summary VARCHAR(255),
+    summary NVARCHAR(255),
     PRIMARY KEY (content_id),
-    FULLTEXT KEY idx_title_description ( title , body , summary )
-)  ENGINE=MYISAM DEFAULT CHARSET=UTF8;
+    FULLTEXT KEY idx_title_summary ( title , summary ),
+    FULLTEXT KEY idx_body ( body )
+)  ENGINE=MYISAM DEFAULT CHARSET=UTF8MB4;
 
 --
 -- Triggers for loading content_text from content
@@ -156,37 +180,50 @@ DELIMITER ;
 
 CREATE TABLE category (
     category_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    description VARCHAR(50) NOT NULL,
+    description NVARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY idx_unique_cat_desc (description),
     PRIMARY KEY (category_id)
-);
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 
 CREATE TABLE content_category (
-    content_id INT NOT NULL REFERENCES content (content_id),
-    category_id INT NOT NULL REFERENCES category_id (category_id),
+    content_id INT UNSIGNED NOT NULL,
+    category_id INT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (content_id , category_id)
-);
+    PRIMARY KEY (content_id , category_id),
+    KEY idx_fk_content_id (content_id),
+    CONSTRAINT fk_content_category1 FOREIGN KEY (content_id)
+        REFERENCES content (content_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_category_id (category_id),
+    CONSTRAINT fk_content_category2 FOREIGN KEY (category_id)
+        REFERENCES category (category_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE comment (
     comment_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    content_id INT NOT NULL REFERENCES content (content_id),
-    first_name VARCHAR(50),
-    last_names VARCHAR(127),
+    content_id INT UNSIGNED NOT NULL,
+    first_name NVARCHAR(50),
+    last_names NVARCHAR(127),
     content TEXT NOT NULL,
     reply_comment_id INT,
-    created_by INT NOT NULL REFERENCES member_id (member_id),
+    created_by INT UNSIGNED,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id),
-    CONSTRAINT fk_comment_member FOREIGN KEY (created_by)
-        REFERENCES member_id (member_id)
+    KEY idx_fk_content_id (content_id),
+    CONSTRAINT fk_content_comment FOREIGN KEY (content_id)
+        REFERENCES content (content_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_created_by (created_by),
+    CONSTRAINT fk_content_membership FOREIGN KEY (created_by)
+        REFERENCES membership (member_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
-);
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
