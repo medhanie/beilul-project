@@ -26,8 +26,8 @@ CREATE TABLE flyway_schema_history (
 
 CREATE TABLE membership (
     member_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    first_name NVARCHAR(50) NOT NULL,
-    last_name NVARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
     address_id INT UNSIGNED NOT NULL,
     picture VARCHAR(255) DEFAULT NULL,
     picture_thumb VARCHAR(255) DEFAULT NULL,
@@ -70,12 +70,12 @@ CREATE TABLE member_role (
 
 CREATE TABLE address (
     address_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    address NVARCHAR(50) NOT NULL,
-    address2 NVARCHAR(50) DEFAULT NULL,
-    district NVARCHAR(20) NOT NULL,
+    address VARCHAR(50) NOT NULL,
+    address2 VARCHAR(50) DEFAULT NULL,
+    district VARCHAR(20) NOT NULL,
     country_id CHAR(3) NOT NULL,
-    city_name NVARCHAR(50),
-    admin_zone_name NVARCHAR(50),
+    city_name VARCHAR(50),
+    admin_zone_name VARCHAR(50),
     postal_code VARCHAR(10) DEFAULT NULL,
     phone VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -83,13 +83,13 @@ CREATE TABLE address (
     PRIMARY KEY (address_id),
     KEY idx_fk_country_id (country_id),
     CONSTRAINT `fk_address_country_id` FOREIGN KEY (country_id)
-        REFERENCES country (country_id_iso3)
+        REFERENCES country (country_iso3)
         ON DELETE RESTRICT ON UPDATE CASCADE
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE city (
     city_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    city_name NVARCHAR(50) NOT NULL,
+    city_name VARCHAR(50) NOT NULL,
     admin_zone_id SMALLINT UNSIGNED NOT NULL,
     latitude DECIMAL(6 , 4 ),
     longitude DECIMAL(6 , 2 ),
@@ -104,33 +104,33 @@ CREATE TABLE city (
 
 CREATE TABLE admin_zone (
     admin_zone_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    admin_zone_name NVARCHAR(60) NOT NULL,
+    admin_zone_name VARCHAR(60) NOT NULL,
     country_id CHAR(3) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (admin_zone_id),
     KEY idx_fk_country_id (country_id),
     CONSTRAINT `fk_admin_zone_country` FOREIGN KEY (country_id)
-        REFERENCES country (country_id_iso3)
+        REFERENCES country (country_iso3)
         ON DELETE RESTRICT ON UPDATE CASCADE
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE country (
-    country_id_iso3 CHAR(3) NOT NULL,
-    country_id_iso2 CHAR(2) NOT NULL,
-    country_name NVARCHAR(50) NOT NULL,
+    country_iso3 CHAR(3) NOT NULL,
+    country_iso2 CHAR(2) NOT NULL,
+    country_name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY idx_unique_iso2 (country_id_iso2),
-    PRIMARY KEY (country_id_iso3)
+    UNIQUE KEY idx_unique_iso2 (country_iso2),
+    PRIMARY KEY (country_iso3)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 
 CREATE TABLE content (
     content_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title NVARCHAR(127) NOT NULL,
+    title VARCHAR(127) NOT NULL,
     body TEXT NOT NULL,
-    summary NVARCHAR(255),
+    summary VARCHAR(255),
     created_by INT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -143,9 +143,9 @@ CREATE TABLE content (
 
 CREATE TABLE content_text (
     content_id INT UNSIGNED NOT NULL,
-    title NVARCHAR(127) NOT NULL,
+    title VARCHAR(127) NOT NULL,
     body TEXT NOT NULL,
-    summary NVARCHAR(255),
+    summary VARCHAR(255),
     PRIMARY KEY (content_id),
     FULLTEXT KEY idx_title_summary ( title , summary ),
     FULLTEXT KEY idx_body ( body )
@@ -180,7 +180,7 @@ DELIMITER ;
 
 CREATE TABLE category (
     category_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    description NVARCHAR(50) NOT NULL,
+    description VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY idx_unique_cat_desc (description),
@@ -207,8 +207,8 @@ CREATE TABLE content_category (
 CREATE TABLE comment (
     comment_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     content_id INT UNSIGNED NOT NULL,
-    first_name NVARCHAR(50),
-    last_names NVARCHAR(127),
+    first_name VARCHAR(50),
+    last_names VARCHAR(127),
     content TEXT NOT NULL,
     reply_comment_id INT,
     created_by INT UNSIGNED,
