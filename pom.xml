@@ -15,7 +15,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<mysql.driver.version>8.0.20</mysql.driver.version>
+		<java.version>11</java.version>
 	</properties>
 
 	<description>Demo project for Spring Boot</description>
@@ -23,6 +23,8 @@
 
 	<modules>
 		<module>beilul-migration</module>
+		<module>beilul-models</module>
+		<module>beilul-app</module>
 	</modules>
 
 
