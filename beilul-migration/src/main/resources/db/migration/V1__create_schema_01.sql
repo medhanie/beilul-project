@@ -75,9 +75,8 @@ CREATE TABLE address (
     district VARCHAR(20) NOT NULL,
     country_id CHAR(3) NOT NULL,
     city_name VARCHAR(50),
-    admin_zone_name VARCHAR(50),
     postal_code VARCHAR(10) DEFAULT NULL,
-    phone VARCHAR(20) NOT NULL,
+    phone VARCHAR(20),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (address_id),
@@ -221,6 +220,49 @@ CREATE TABLE comment (
         ON DELETE RESTRICT ON UPDATE CASCADE,
     KEY idx_fk_created_by (created_by),
     CONSTRAINT fk_content_membership FOREIGN KEY (created_by)
+        REFERENCES membership (member_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+CREATE TABLE language (
+    language_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50),
+    native_name VARCHAR(50),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (language_id)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+CREATE TABLE language_content (
+    language_id INT UNSIGNED NOT NULL,
+    content_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (language_id , content_id),
+    KEY idx_fk_content_language (content_id),
+    CONSTRAINT fk_content_language FOREIGN KEY (content_id)
+        REFERENCES content (content_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_language_content (language_id),
+    CONSTRAINT fk_fk_language_content FOREIGN KEY (language_id)
+        REFERENCES language (language_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+CREATE TABLE approver (
+    approver_id INT UNSIGNED NOT NULL,
+    content_id INT UNSIGNED NOT NULL,
+    isApproved BOOLEAN NOT NULL,
+    reason VARCHAR(1024) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (approver_id , content_id),
+    KEY idx_fk_content_approver (content_id),
+    CONSTRAINT fk_content_approver FOREIGN KEY (content_id)
+        REFERENCES content (content_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_approver_content (approver_id),
+    CONSTRAINT fk_fk_approver_content FOREIGN KEY (approver_id)
         REFERENCES membership (member_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;

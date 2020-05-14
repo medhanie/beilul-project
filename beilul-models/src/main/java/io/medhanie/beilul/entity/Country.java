@@ -1,5 +1,6 @@
 package io.medhanie.beilul.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity(name = "country")
-public class Country {
+public class Country implements Serializable {
     @Id
     @Column(columnDefinition = "char")
     private String countryIso3;

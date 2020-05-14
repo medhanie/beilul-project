@@ -1,5 +1,6 @@
 package io.medhanie.beilul.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Data
-public class AdminZone {
+public class AdminZone implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private short adminZoneId;
