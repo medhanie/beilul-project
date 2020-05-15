@@ -6,30 +6,21 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Address implements Serializable {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int addressId;
-    @NotNull
-    private String address;
-    private String address2;
-    private String district;
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
-    private String cityName;
-    private String postalCode;
+    private short roleId;
 
-    private String phone;
+    @Column(unique = true)
+    private String name;
+
     @NotNull
-    @CreationTimestamp()
+    @CreationTimestamp
     private OffsetDateTime createdAt;
     @NotNull
     @CreationTimestamp

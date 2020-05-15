@@ -2,6 +2,7 @@ package io.medhanie.beilul.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,9 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @NoArgsConstructor
@@ -27,4 +30,11 @@ public class City implements Serializable {
     private AdminZone adminZoneId;
     private BigDecimal latitude;
     private BigDecimal longitude;
+
+    @NotNull
+    @CreationTimestamp()
+    private OffsetDateTime createdAt;
+    @NotNull
+    @CreationTimestamp
+    private OffsetDateTime lastUpdate;
 }

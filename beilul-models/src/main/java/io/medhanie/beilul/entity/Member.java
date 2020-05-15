@@ -1,13 +1,14 @@
 package io.medhanie.beilul.entity;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Entity(name = "membership")
 @Data
@@ -28,13 +29,22 @@ public class Member implements Serializable {
     private String picture;
     private String pictureThumb;
     @NotNull
+    @Column(unique = true)
     private String email;
     @Column(name = "active")
     private boolean isActive;
     @NotNull
+    @Column(unique = true)
     private String username;
     @NotNull
     private String password;
+    @ManyToMany
+    @JoinTable(
+            name = "member_role",
+            joinColumns = {@JoinColumn(name = "member_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private List<Role> roles;
     @NotNull
     @CreationTimestamp()
     private OffsetDateTime createdAt;

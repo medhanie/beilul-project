@@ -38,6 +38,8 @@ CREATE TABLE membership (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (member_id),
+    UNIQUE KEY idx_unique_mem_email (email),
+    UNIQUE KEY idx_unique_mem_username (username),
     KEY idx_fk_address_id (address_id),
     CONSTRAINT fk_staff_address FOREIGN KEY (address_id)
         REFERENCES address (address_id)
@@ -45,7 +47,7 @@ CREATE TABLE membership (
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE role (
-    role_id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    role_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -56,7 +58,7 @@ CREATE TABLE role (
 
 CREATE TABLE member_role (
     member_id INT UNSIGNED NOT NULL,
-    role_id TINYINT UNSIGNED NOT NULL,
+    role_id SMALLINT UNSIGNED NOT NULL,
     PRIMARY KEY (member_id , role_id),
     KEY idx_fk_member_id (member_id),
     CONSTRAINT fk_membership_role FOREIGN KEY (member_id)
@@ -262,7 +264,30 @@ CREATE TABLE approver (
         REFERENCES content (content_id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
     KEY idx_fk_approver_content (approver_id),
-    CONSTRAINT fk_fk_approver_content FOREIGN KEY (approver_id)
+    CONSTRAINT fk_approver_content FOREIGN KEY (approver_id)
+        REFERENCES membership (member_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+CREATE TABLE access_log (
+    access_log_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    content_id INT UNSIGNED NOT NULL,
+    member_id INT UNSIGNED NOT NULL,
+    request_method VARCHAR(50) NOT NULL,
+    response_status SMALLINT NOT NULL,
+    request_size VARCHAR(50),
+    response_size VARCHAR(50),
+    db_access_time SMALLINT,
+    api_access_time SMALLINT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (access_log_id),
+    KEY idx_fk_access_content (content_id),
+    CONSTRAINT fk_access_content FOREIGN KEY (content_id)
+        REFERENCES content (content_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_access_member (member_id),
+    CONSTRAINT fk_access_member FOREIGN KEY (member_id)
         REFERENCES membership (member_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;

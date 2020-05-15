@@ -1,6 +1,7 @@
 package io.medhanie.beilul.entity;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -8,9 +9,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @NoArgsConstructor
@@ -25,4 +28,11 @@ public class Country implements Serializable {
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
     private List<AdminZone> adminZone;
+
+    @NotNull
+    @CreationTimestamp()
+    private OffsetDateTime createdAt;
+    @NotNull
+    @CreationTimestamp
+    private OffsetDateTime lastUpdate;
 }

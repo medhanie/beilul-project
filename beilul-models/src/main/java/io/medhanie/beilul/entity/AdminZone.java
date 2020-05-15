@@ -1,6 +1,7 @@
 package io.medhanie.beilul.entity;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,9 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
@@ -30,4 +33,11 @@ public class AdminZone implements Serializable {
 
     @OneToMany(mappedBy = "adminZoneId", cascade = CascadeType.ALL)
     private List<City> city;
+
+    @NotNull
+    @CreationTimestamp()
+    private OffsetDateTime createdAt;
+    @NotNull
+    @CreationTimestamp
+    private OffsetDateTime lastUpdate;
 }
