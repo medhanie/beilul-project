@@ -1,7 +1,5 @@
 package io.medhanie.beilul.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -9,19 +7,20 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
-@Entity
-@Data
-@NoArgsConstructor
-public class Role implements Serializable {
+public class Approver implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private short roleId;
-
-    @Column(unique = true)
-    private String name;
-
+    private int approverId;
     @NotNull
-    @CreationTimestamp
+    @ManyToOne
+    @JoinColumn(name="content_id")
+    private Content content;
+    @NotNull
+    private boolean isApproved;
+    @NotNull
+    private String reason;
+    @NotNull
+    @CreationTimestamp()
     private OffsetDateTime createdAt;
     @NotNull
     @CreationTimestamp

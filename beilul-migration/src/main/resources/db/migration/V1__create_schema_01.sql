@@ -130,7 +130,7 @@ CREATE TABLE country (
 CREATE TABLE content (
     content_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     title VARCHAR(127) NOT NULL,
-    body TEXT NOT NULL,
+    body MEDIUMTEXT NOT NULL,
     summary VARCHAR(255),
     created_by INT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -145,7 +145,7 @@ CREATE TABLE content (
 CREATE TABLE content_text (
     content_id INT UNSIGNED NOT NULL,
     title VARCHAR(127) NOT NULL,
-    body TEXT NOT NULL,
+    body MEDIUMTEXT NOT NULL,
     summary VARCHAR(255),
     PRIMARY KEY (content_id),
     FULLTEXT KEY idx_title_summary ( title , summary ),
@@ -208,11 +208,9 @@ CREATE TABLE content_category (
 CREATE TABLE comment (
     comment_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     content_id INT UNSIGNED NOT NULL,
-    first_name VARCHAR(50),
-    last_names VARCHAR(127),
-    content TEXT NOT NULL,
-    reply_comment_id INT,
-    created_by INT UNSIGNED,
+    comment TEXT NOT NULL,
+    reply_comment_id INT UNSIGNED,
+    created_by INT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id),
@@ -223,6 +221,10 @@ CREATE TABLE comment (
     KEY idx_fk_created_by (created_by),
     CONSTRAINT fk_content_membership FOREIGN KEY (created_by)
         REFERENCES membership (member_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    KEY idx_fk_comment (reply_comment_id),
+    CONSTRAINT fk_comment FOREIGN KEY (reply_comment_id)
+        REFERENCES comment (comment_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
@@ -276,10 +278,10 @@ CREATE TABLE access_log (
     member_id INT UNSIGNED NOT NULL,
     request_method VARCHAR(50) NOT NULL,
     response_status SMALLINT NOT NULL,
-    request_size VARCHAR(50),
-    response_size VARCHAR(50),
-    db_access_time SMALLINT,
-    api_access_time SMALLINT,
+    request_size VARCHAR(50) NOT NULL,
+    response_size VARCHAR(50) NOT NULL,
+    db_access_time SMALLINT NOT NULL,
+    api_access_time SMALLINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (access_log_id),
     KEY idx_fk_access_content (content_id),

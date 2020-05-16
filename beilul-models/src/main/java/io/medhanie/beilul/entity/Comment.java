@@ -12,16 +12,28 @@ import java.time.OffsetDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-public class Role implements Serializable {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private short roleId;
-
-    @Column(unique = true)
-    private String name;
+    private int commentId;
 
     @NotNull
-    @CreationTimestamp
+    @ManyToOne
+    @JoinColumn(name="content_id")
+    private Content content;
+    @NotNull
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+    @NotNull
+    @OneToMany
+    @JoinColumn(name="reply_comment_id")
+    private int replyCommentId;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private Member createdBy;
+    @NotNull
+    @CreationTimestamp()
     private OffsetDateTime createdAt;
     @NotNull
     @CreationTimestamp
