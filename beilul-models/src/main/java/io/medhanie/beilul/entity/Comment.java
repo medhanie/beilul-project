@@ -21,21 +21,24 @@ public class Comment implements Serializable {
     @ManyToOne
     @JoinColumn(name="content_id")
     private Content content;
+
     @NotNull
     @Column(columnDefinition = "TEXT")
     private String comment;
+
     @NotNull
-    @OneToMany
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="reply_comment_id")
-    private int replyCommentId;
+    private Comment replyComment;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Member createdBy;
-    @NotNull
-    @CreationTimestamp()
+
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

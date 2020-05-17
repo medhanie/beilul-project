@@ -63,7 +63,7 @@ CREATE TABLE member_role (
     KEY idx_fk_member_id (member_id),
     CONSTRAINT fk_membership_role FOREIGN KEY (member_id)
         REFERENCES membership (member_id)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+        ON DELETE CASCADE ON UPDATE CASCADE,
     KEY idx_fk_role_id (role_id),
     CONSTRAINT fk_role FOREIGN KEY (role_id)
         REFERENCES role (role_id)
@@ -254,19 +254,20 @@ CREATE TABLE language_content (
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE approver (
-    approver_id INT UNSIGNED NOT NULL,
+    approve_id INT UNSIGNED NOT NULL,
     content_id INT UNSIGNED NOT NULL,
-    isApproved BOOLEAN NOT NULL,
+    approved_by INT UNSIGNED NOT NULL,
+    is_approved BOOLEAN NOT NULL,
     reason VARCHAR(1024) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (approver_id , content_id),
-    KEY idx_fk_content_approver (content_id),
-    CONSTRAINT fk_content_approver FOREIGN KEY (content_id)
+    PRIMARY KEY (approve_id),
+    KEY idx_fk_content_approve (content_id),
+    CONSTRAINT fk_content_approv FOREIGN KEY (content_id)
         REFERENCES content (content_id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
-    KEY idx_fk_approver_content (approver_id),
-    CONSTRAINT fk_approver_content FOREIGN KEY (approver_id)
+    KEY idx_fk_approved_by_content (approved_by),
+    CONSTRAINT fk_approved_by_content FOREIGN KEY (approved_by)
         REFERENCES membership (member_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;

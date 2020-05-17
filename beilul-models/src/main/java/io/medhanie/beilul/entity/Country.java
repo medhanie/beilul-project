@@ -22,17 +22,18 @@ public class Country implements Serializable {
     @Id
     @Column(columnDefinition = "char")
     private String countryIso3;
+
     @Column(columnDefinition = "char")
     private String countryIso2;
+
     private String countryName;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
     private List<AdminZone> adminZone;
 
-    @NotNull
-    @CreationTimestamp()
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

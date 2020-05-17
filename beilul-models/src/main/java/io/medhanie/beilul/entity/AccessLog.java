@@ -16,28 +16,31 @@ public class AccessLog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accessLogId;
+
     @NotNull
-    @ManyToOne
-    @JoinColumn(name="content_id")
     private int contentId;
+
     @NotNull
-    @ManyToOne
-    @JoinColumn(name="member_id")
-    private short memberId;
+    private int memberId;
+
     @NotNull
     private String requestMethod;
+
     @NotNull
-    private String responseStatus;
+    private short responseStatus;
+
     @NotNull
     private String requestSize;
+
     @NotNull
     private String responseSize;
+
     @NotNull
     private short dbAccessTime;
+
     @NotNull
     private short apiAccessTime;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime createdAt;
-
 }

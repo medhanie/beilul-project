@@ -18,26 +18,36 @@ public class Member implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
+
     @NotNull
     private String firstName;
+
     @NotNull
     private String lastName;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
+
     private String picture;
+
     private String pictureThumb;
+
     @NotNull
     @Column(unique = true)
     private String email;
+
     @Column(name = "active")
     private boolean isActive;
+
     @NotNull
     @Column(unique = true)
     private String username;
+
     @NotNull
     private String password;
+
     @ManyToMany
     @JoinTable(
             name = "member_role",
@@ -45,11 +55,10 @@ public class Member implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private List<Role> roles;
-    @NotNull
-    @CreationTimestamp()
+
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
-
 }

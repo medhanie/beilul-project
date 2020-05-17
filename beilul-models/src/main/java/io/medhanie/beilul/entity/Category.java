@@ -18,13 +18,14 @@ import java.time.OffsetDateTime;
 public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int accessLogId;
+    private int categoryId;
+
     @NotNull
     private String description;
-    @NotNull
-    @CreationTimestamp()
+
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

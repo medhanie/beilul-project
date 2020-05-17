@@ -19,14 +19,16 @@ public class Language implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int languageId;
+
     @NotNull
     private String name;
+
     @NotNull
     private String nativeName;
-    @NotNull
-    @CreationTimestamp()
+
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

@@ -20,10 +20,9 @@ public class Role implements Serializable {
     @Column(unique = true)
     private String name;
 
-    @NotNull
     @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

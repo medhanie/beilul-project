@@ -16,22 +16,28 @@ public class Address implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int addressId;
+
     @NotNull
     private String address;
+
     private String address2;
+
     private String district;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
+
     private String cityName;
+
     private String postalCode;
 
     private String phone;
-    @NotNull
-    @CreationTimestamp()
+
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

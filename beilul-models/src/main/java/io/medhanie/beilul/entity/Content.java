@@ -16,22 +16,29 @@ import java.util.List;
 public class Content implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int addressId;
+    private int contentId;
+
     @NotNull
     private String title;
+
     @NotNull
     @Column(columnDefinition = "MEDIUMTEXT")
     private String body;
+
     @NotNull
     private String Summary;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Member createdBy;
+
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
     private List<Approver> approvers;
+
     @ManyToMany
     @JoinTable(
             name = "content_category",
@@ -39,17 +46,18 @@ public class Content implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private List<Category> categories;
+
     @ManyToMany
     @JoinTable(
             name = "language_content",
-            joinColumns = {@JoinColumn(name = "language_id")},
-            inverseJoinColumns = {@JoinColumn(name = "content_id")}
+            joinColumns = {@JoinColumn(name = "content_id")},
+            inverseJoinColumns = {@JoinColumn(name = "language_id")}
     )
     private List<Language> languages;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

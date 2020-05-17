@@ -24,17 +24,20 @@ public class City implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private short cityId;
+
     private String cityName;
+
     @ManyToOne
     @JoinColumn(name = "admin_zone_id")
     private AdminZone adminZoneId;
+
     private BigDecimal latitude;
+
     private BigDecimal longitude;
 
-    @NotNull
-    @CreationTimestamp()
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }

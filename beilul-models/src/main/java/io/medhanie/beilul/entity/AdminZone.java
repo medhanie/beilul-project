@@ -25,6 +25,7 @@ public class AdminZone implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private short adminZoneId;
+
     private String adminZoneName;
 
     @ManyToOne
@@ -34,10 +35,9 @@ public class AdminZone implements Serializable {
     @OneToMany(mappedBy = "adminZoneId", cascade = CascadeType.ALL)
     private List<City> city;
 
-    @NotNull
-    @CreationTimestamp()
+    @CreationTimestamp
     private OffsetDateTime createdAt;
-    @NotNull
+
     @CreationTimestamp
     private OffsetDateTime lastUpdate;
 }
