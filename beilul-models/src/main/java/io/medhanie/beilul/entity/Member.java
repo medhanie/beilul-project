@@ -48,7 +48,7 @@ public class Member implements Serializable {
     @NotNull
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "member_role",
             joinColumns = {@JoinColumn(name = "member_id")},

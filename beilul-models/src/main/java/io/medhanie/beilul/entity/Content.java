@@ -3,6 +3,8 @@ package io.medhanie.beilul.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,12 +35,15 @@ public class Content implements Serializable {
     @JoinColumn(name = "created_by")
     private Member createdBy;
 
-    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @Column(name = "content_id")
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @Column(name ="approved_by")
     private List<Approver> approvers;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(
             name = "content_category",
@@ -47,6 +52,7 @@ public class Content implements Serializable {
     )
     private List<Category> categories;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     @JoinTable(
             name = "language_content",

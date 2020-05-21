@@ -36,10 +36,10 @@ public class AccessLog implements Serializable {
     private String responseSize;
 
     @NotNull
-    private short dbAccessTime;
+    private OffsetDateTime dbAccessTime;
 
     @NotNull
-    private short apiAccessTime;
+    private OffsetDateTime apiAccessTime;
 
     @CreationTimestamp
     private OffsetDateTime createdAt;

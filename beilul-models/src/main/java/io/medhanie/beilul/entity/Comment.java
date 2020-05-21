@@ -18,15 +18,12 @@ public class Comment implements Serializable {
     private int commentId;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name="content_id")
-    private Content content;
+    private int contentId;
 
     @NotNull
     @Column(columnDefinition = "TEXT")
     private String comment;
 
-    @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="reply_comment_id")
     private Comment replyComment;

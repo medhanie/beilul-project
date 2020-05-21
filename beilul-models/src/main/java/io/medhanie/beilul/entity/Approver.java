@@ -19,14 +19,12 @@ public class Approver implements Serializable {
     private int approveId;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name="content_id")
-    private Content content;
+    private int contentId;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name="approved_by")
-    private Member member;
+    private Member approvedBy;
 
     @NotNull
     private boolean isApproved;
