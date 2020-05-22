@@ -25,6 +25,7 @@
 		<module>beilul-migration</module>
 		<module>beilul-models</module>
 		<module>beilul-app</module>
+		<module>beilul-upload</module>
 	</modules>
 
 
