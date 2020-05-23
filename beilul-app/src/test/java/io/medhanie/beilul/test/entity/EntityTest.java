@@ -1,4 +1,4 @@
-package io.medhanie.beilul.test;
+package io.medhanie.beilul.test.entity;
 
 import io.medhanie.beilul.entity.*;
 import io.medhanie.beilul.repository.*;

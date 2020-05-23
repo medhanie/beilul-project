@@ -31,6 +31,9 @@ public class Content implements Serializable {
     private String Summary;
 
     @NotNull
+    private int viewCount;
+
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Member createdBy;
